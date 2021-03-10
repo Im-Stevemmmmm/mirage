@@ -3,7 +3,6 @@ package cli
 import (
 	"encoding/json"
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 
@@ -14,31 +13,21 @@ const (
 	gitignoreWriteErrMsg = "Something went wrong while writing to the .gitignore file!"
 )
 
-func parseFlags() initVCSData {
-	dbEngine := flag.String("db-engine", "", "The database type. MySQL or PostgreSQL are supported.")
-	connectionString := flag.String("connection-string", "", "The connection string for the database to be tracked.")
-
-	flag.Parse()
-
-	return initVCSData{
-		DBEngine:         *dbEngine,
-		ConnectionString: *connectionString,
-	}
-}
-
 // InitVCS initializes the Mirage VCS system
-func InitVCS() {
-	data := parseFlags()
-	if len(data.ConnectionString) == 0 {
+func InitVCS(data *InitVCSData) {
+	cs := *data.ConnectionString
+	if len(cs) == 0 {
 		fmt.Println("No value for connection-string specified")
 		return
 	}
-	if len(data.DBEngine) == 0 {
+
+	dbEngine := *data.DBEngine
+	if len(dbEngine) == 0 {
 		fmt.Println("No value for db-engine specified")
 		return
 	}
 
-	h := database.Handlers[data.DBEngine]
+	h := database.Handlers[dbEngine]
 	if h == nil {
 		fmt.Printf("The database engine %s is not supported\n", h)
 		return
@@ -48,20 +37,22 @@ func InitVCS() {
 	os.Mkdir(".mirage", 0755)
 	appendGitignore()
 
-	os.Chdir(".mirage")
-	os.Mkdir("local", 0755)
-	os.Create("settings.json")
+	os.Mkdir(".mirage/local", 0755)
+	os.Create(".mirage/config.json")
 
 	json, _ := json.MarshalIndent(data, "", "  ")
-	os.WriteFile("settings.json", json, 0644)
+	os.WriteFile(".mirage/config.json", json, 0644)
 
-	h.Clone(data.ConnectionString)
+	if err := h.Clone(*data.ConnectionString); err != nil {
+		panic(err)
+	}
 }
 
 func appendGitignore() {
 	flags := os.O_APPEND | os.O_WRONLY
 
 	gitignore, err := os.OpenFile(".gitignore", flags, 0644)
+	defer gitignore.Close()
 
 	var exists bool
 	if errors.Is(err, os.ErrNotExist) {
@@ -89,7 +80,8 @@ func appendGitignore() {
 	}
 }
 
-type initVCSData struct {
-	DBEngine         string
-	ConnectionString string
+// InitVCSData is the data for initializing Mirage
+type InitVCSData struct {
+	DBEngine         *string
+	ConnectionString *string
 }

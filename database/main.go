@@ -8,5 +8,5 @@ var (
 )
 
 type dbHandler interface {
-	Clone(cs string)
+	Clone(cs string) error
 }

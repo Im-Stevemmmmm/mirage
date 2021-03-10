@@ -1,4 +1,2 @@
 dist
-
-# Mirage directories
-.mirage/local
+.mirage
