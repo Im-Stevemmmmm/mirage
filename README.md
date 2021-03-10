@@ -1,6 +1,6 @@
 # Mirage
 
-Mirage is an open-source database Version Control System with features such as branching, migrations, and diff views.
+An open-source database version control system with features such as branching, migrations, commits, and diff views.
 
 ## Installation
 
