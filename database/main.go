@@ -1,12 +1,12 @@
 package database
 
 var (
-	// DBHandlers is all of the supported databases
-	DBHandlers = map[string]dbHandler{
+	// Handlers is all of the supported databases
+	Handlers = map[string]dbHandler{
 		"postgres": postgres{},
 	}
 )
 
 type dbHandler interface {
-	clone()
+	Clone(cs string)
 }

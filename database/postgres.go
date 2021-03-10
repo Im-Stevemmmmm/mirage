@@ -1,5 +1,5 @@
 package database
 
-func (p postgres) clone() {}
+func (p postgres) Clone(cs string) {}
 
 type postgres struct{}
