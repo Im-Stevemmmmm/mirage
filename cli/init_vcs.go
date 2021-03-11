@@ -34,18 +34,22 @@ func InitVCS(data *InitVCSData) {
 	}
 
 	// Begin initialization
-	os.Mkdir(".mirage", 0755)
+	os.Mkdir(rootDir, 0755)
 	appendGitignore()
 
-	os.Mkdir(".mirage/local", 0755)
-	os.Create(".mirage/config.json")
+	os.Mkdir(rootDir+"local", 0755)
+	os.Create(rootDir + "config.json")
+	os.Create(statePath)
 
 	json, _ := json.MarshalIndent(data, "", "  ")
-	os.WriteFile(".mirage/config.json", json, 0644)
+	os.WriteFile(rootDir+"config.json", json, 0644)
 
 	if err := h.Clone(*data.ConnectionString); err != nil {
 		panic(err)
 	}
+
+	CreateBranch("master")
+	CheckoutBranch("master")
 }
 
 func appendGitignore() {
