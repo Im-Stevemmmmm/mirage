@@ -1,6 +1,9 @@
 package cli_test
 
 import (
+	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"os"
 	"testing"
 
@@ -16,7 +19,42 @@ func TestInitVCS(t *testing.T) {
 		ConnectionString: &cs,
 	})
 
-	if _, err := os.Stat(".gitignore"); os.IsNotExist(err) {
-		t.Fatal("GCC")
+	if err := pathExists(".gitignore"); err != nil {
+		t.Fatal(err)
 	}
+
+	if err := pathExists(".mirage/config.json"); err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := ioutil.ReadFile(".mirage/config.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var config cli.InitVCSData
+	json.Unmarshal(data, &config)
+
+	if *config.ConnectionString != cs {
+		t.Fatalf("ConnectionString in the config does not match; got %s expected %s", *config.ConnectionString, cs)
+	}
+
+	if *config.DBEngine != dbEngine {
+		t.Fatalf("DBEngine in the config does not match; got %s expected %s", *config.DBEngine, dbEngine)
+	}
+
+	if err := pathExists(".mirage/master.pgsql"); err != nil {
+		t.Fatal(err)
+	}
+
+	// Cleanup
+	os.RemoveAll(".mirage")
+	os.Remove(".gitignore")
+}
+
+func pathExists(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return errors.New(path + " was not found")
+	}
+	return nil
 }
