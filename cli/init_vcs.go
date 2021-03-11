@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/Im-Stevemmmmm/mirage/database"
+	"github.com/Im-Stevemmmmm/mirage/vcs"
 )
 
 const (
@@ -34,22 +35,22 @@ func InitVCS(data *InitVCSData) {
 	}
 
 	// Begin initialization
-	os.Mkdir(rootDir, 0755)
+	os.Mkdir(vcs.RootDir, 0755)
 	appendGitignore()
 
-	os.Mkdir(rootDir+"local", 0755)
-	os.Create(rootDir + "config.json")
-	os.Create(statePath)
+	os.Mkdir(vcs.LocalDir, 0755)
+	os.Create(vcs.ConfigPath)
+	os.Create(vcs.StatePath)
 
 	json, _ := json.MarshalIndent(data, "", "  ")
-	os.WriteFile(rootDir+"config.json", json, 0644)
+	os.WriteFile(vcs.ConfigPath, json, 0644)
 
 	if err := h.Clone(*data.ConnectionString); err != nil {
 		panic(err)
 	}
 
-	CreateBranch("master")
-	CheckoutBranch("master")
+	vcs.CreateBranch("master")
+	vcs.CheckoutBranch("master")
 }
 
 func appendGitignore() {
