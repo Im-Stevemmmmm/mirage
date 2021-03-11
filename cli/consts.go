@@ -1,5 +1,6 @@
 package cli
 
 const (
-	rootDir = ".mirage/"
+	rootDir  = ".mirage/"
+	localDir = rootDir + "local/"
 )

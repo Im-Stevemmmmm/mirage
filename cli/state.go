@@ -22,7 +22,8 @@ type branch struct {
 }
 
 type commit struct {
-	Hash   string `json:"Hash"`
+	Title  string `json:"Title"`
 	Author string `json:"Author"`
+	Hash   string `json:"Hash"`
 	// Time   string `json:"Time"`
 }

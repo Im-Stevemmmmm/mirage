@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	statePath = rootDir + "state.json"
+	statePath = localDir + "state.json"
 )
 
 // CreateBranch creates a branch
