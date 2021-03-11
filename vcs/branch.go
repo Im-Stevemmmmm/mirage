@@ -44,7 +44,7 @@ func CheckoutBranch(name string) error {
 	return nil
 }
 
-// Branch represents a branch
+// Branch is a group of independent commits
 type Branch struct {
 	Name    string   `json:"Name"`
 	Commits []Commit `json:"Commits"`

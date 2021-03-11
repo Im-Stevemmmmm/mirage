@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	// Postgres driover
+	// Postgres driver
 	_ "github.com/lib/pq"
 )
 
