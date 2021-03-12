@@ -53,3 +53,8 @@ type Branch struct {
 	Name    string   `json:"Name"`
 	Commits []Commit `json:"Commits"`
 }
+
+// Merge merges a branch with another branch.
+func (b Branch) Merge(target Branch) {
+
+}
