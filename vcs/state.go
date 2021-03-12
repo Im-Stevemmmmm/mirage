@@ -1,11 +1,12 @@
 package vcs
 
 const (
-	// StatePath is where the state file is located
+	// StatePath is the location of the state file.
 	StatePath = LocalDir + "state.json"
 )
 
-// State is the local repository state
+// State is the keeps track of commits and the data required to operate the
+// version control system's branching and history features.
 type State struct {
 	CurrentBranch string   `json:"CurrentBranch"`
 	Branches      []Branch `json:"Branches"`
