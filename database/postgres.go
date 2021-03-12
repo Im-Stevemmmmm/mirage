@@ -40,4 +40,8 @@ func (p postgres) Clone(cs string) error {
 	return nil
 }
 
+func (p postgres) ApplyMigration(m Migration) error {
+	return nil
+}
+
 type postgres struct{}
