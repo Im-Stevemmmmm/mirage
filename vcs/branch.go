@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 )
 
-// CreateBranch creates a branch
-func CreateBranch(name string) error {
+// CreateBranch creates a new branch.
+func CreateBranch(name string, checkout bool) error {
 	sf, err := ioutil.ReadFile(StatePath)
 	if err != nil {
 		return err
@@ -23,10 +23,14 @@ func CreateBranch(name string) error {
 	fs, _ := json.MarshalIndent(s, "", "  ")
 	ioutil.WriteFile(StatePath, fs, 0644)
 
+	if checkout {
+		CheckoutBranch(name)
+	}
+
 	return nil
 }
 
-// CheckoutBranch switches branch
+// CheckoutBranch switches the user's active branch.
 func CheckoutBranch(name string) error {
 	sf, err := ioutil.ReadFile(StatePath)
 	if err != nil {
@@ -44,7 +48,7 @@ func CheckoutBranch(name string) error {
 	return nil
 }
 
-// Branch is a group of independent commits
+// Branch is a group of independent commits.
 type Branch struct {
 	Name    string   `json:"Name"`
 	Commits []Commit `json:"Commits"`

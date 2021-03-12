@@ -49,8 +49,7 @@ func InitVCS(data *InitVCSData) {
 		panic(err)
 	}
 
-	vcs.CreateBranch("master")
-	vcs.CheckoutBranch("master")
+	vcs.CreateBranch("master", true)
 }
 
 func appendGitignore() {
